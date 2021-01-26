@@ -743,7 +743,24 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
     /// Draws a value at the specified x and y position.
     @objc open func drawValue(context: CGContext, value: String, xPos: CGFloat, yPos: CGFloat, font: NSUIFont, align: NSTextAlignment, color: NSUIColor)
     {
-        ChartUtils.drawText(context: context, text: value, point: CGPoint(x: xPos, y: yPos), align: align, attributes: [NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor: color])
+        if value.contains("\n") {
+            let paragraphStyle = NSMutableParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+            paragraphStyle.lineBreakMode = .byWordWrapping
+            paragraphStyle.alignment = align
+            ChartUtils.drawMultilineText(
+                context: context,
+                text: value,
+                point: CGPoint(x: xPos, y: yPos),
+                attributes:
+                [.font: font,
+                 .foregroundColor: color,
+                 .paragraphStyle: paragraphStyle],
+                constrainedToSize: CGSize(width: .max, height: .max),
+                anchor: CGPoint(x: 0.5, y: 1.0),
+                angleRadians: 0)
+        } else {
+            ChartUtils.drawText(context: context, text: value, point: CGPoint(x: xPos, y: yPos), align: align, attributes: [NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor: color])
+        }
     }
     
     open override func drawExtras(context: CGContext)
