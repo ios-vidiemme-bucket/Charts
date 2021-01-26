@@ -670,14 +670,32 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
     /// Draws a value at the specified x and y position.
     @objc open func drawValue(context: CGContext, value: String, xPos: CGFloat, yPos: CGFloat, font: NSUIFont, align: TextAlignment, color: NSUIColor, anchor: CGPoint, angleRadians: CGFloat)
     {
-        if (angleRadians == 0.0)
-        {
-            context.drawText(value, at: CGPoint(x: xPos, y: yPos), align: align, attributes: [.font: font, .foregroundColor: color])
-        }
-        else
-        {
-            // align left to center text with rotation
-            context.drawText(value, at: CGPoint(x: xPos, y: yPos), align: align, anchor: anchor, angleRadians: angleRadians, attributes: [.font: font, .foregroundColor: color])
+        
+        if value.contains("\n") {
+            let paragraphStyle = NSMutableParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+            paragraphStyle.lineBreakMode = .byWordWrapping
+            paragraphStyle.alignment = align
+            
+            context.drawMultilineText(
+                value,
+                at: CGPoint(x: xPos, y: yPos),
+                constrainedTo: CGSize(width: .max, height: .max),
+                anchor: CGPoint(x: 0.5, y: 1.0),
+                angleRadians: angleRadians,
+                attributes:
+                [.font: font,
+                 .foregroundColor: color,
+                 .paragraphStyle: paragraphStyle])
+        } else {
+            if (angleRadians == 0.0)
+            {
+                context.drawText(value, at: CGPoint(x: xPos, y: yPos), align: align, attributes: [.font: font, .foregroundColor: color])
+            }
+            else
+            {
+                // align left to center text with rotation
+                context.drawText(value, at: CGPoint(x: xPos, y: yPos), align: align, anchor: anchor, angleRadians: angleRadians, attributes: [.font: font, .foregroundColor: color])
+            }
         }
     }
 
