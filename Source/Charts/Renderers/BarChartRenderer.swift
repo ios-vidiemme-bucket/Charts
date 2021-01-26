@@ -567,7 +567,8 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                                     : (rect.origin.y + rect.size.height + negOffset),
                                 font: valueFont,
                                 align: .center,
-                                color: dataSet.valueTextColorAt(j))
+                                color: dataSet.valueTextColorAt(j),
+                                item: val)
                         }
                         
                         if let icon = e.icon, dataSet.isDrawIconsEnabled
@@ -633,7 +634,8 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                                         (e.y >= 0 ? posOffset : negOffset),
                                     font: valueFont,
                                     align: .center,
-                                    color: dataSet.valueTextColorAt(index))
+                                    color: dataSet.valueTextColorAt(index),
+                                    item: e.y)
                             }
                             
                             if let icon = e.icon, dataSet.isDrawIconsEnabled
@@ -718,7 +720,8 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                                         yPos: y,
                                         font: valueFont,
                                         align: .center,
-                                        color: dataSet.valueTextColorAt(index))
+                                        color: dataSet.valueTextColorAt(index),
+                                        item: val)
                                 }
                                 
                                 if let icon = e.icon, dataSet.isDrawIconsEnabled
@@ -741,7 +744,7 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
     }
     
     /// Draws a value at the specified x and y position.
-    @objc open func drawValue(context: CGContext, value: String, xPos: CGFloat, yPos: CGFloat, font: NSUIFont, align: NSTextAlignment, color: NSUIColor)
+    @objc open func drawValue(context: CGContext, value: String, xPos: CGFloat, yPos: CGFloat, font: NSUIFont, align: NSTextAlignment, color: NSUIColor, item: Double)
     {
         if value.contains("\n") {
             let paragraphStyle = NSMutableParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
@@ -756,7 +759,7 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                  .foregroundColor: color,
                  .paragraphStyle: paragraphStyle],
                 constrainedToSize: CGSize(width: .max, height: .max),
-                anchor: CGPoint(x: 0.5, y: 1.0),
+                anchor: CGPoint(x: 0.5, y: item >= 0 ? 1.0 : 0.0),
                 angleRadians: 0)
         } else {
             ChartUtils.drawText(context: context, text: value, point: CGPoint(x: xPos, y: yPos), align: align, attributes: [NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor: color])
