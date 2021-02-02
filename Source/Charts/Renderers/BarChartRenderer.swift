@@ -750,10 +750,11 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
             let paragraphStyle = NSMutableParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
             paragraphStyle.lineBreakMode = .byWordWrapping
             paragraphStyle.alignment = align
+            let yOffset: CGFloat = 10
             ChartUtils.drawMultilineText(
                 context: context,
                 text: value,
-                point: CGPoint(x: xPos, y: yPos),
+                point: CGPoint(x: xPos, y: item >= 0 ? yPos + yOffset : yPos),
                 attributes:
                 [.font: font,
                  .foregroundColor: color,
